@@ -1,0 +1,11 @@
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/repository/UserRepository.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/AuthApplication.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/dto/VerifyOtpRequest.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/dto/UserDto.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/service/AuthService.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/dto/RegisterRequest.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/dto/AuthResponse.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/config/SecurityConfig.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/controller/AuthController.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/model/User.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/auth-service/src/main/java/com/bankportal/auth/dto/LoginRequest.java
