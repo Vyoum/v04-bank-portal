@@ -21,8 +21,6 @@ export default function Register() {
     setLoading(true)
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
       if (password !== confirmPassword) {
         throw new Error("Passwords do not match")
       }
@@ -31,17 +29,23 @@ export default function Register() {
         throw new Error("Password must be at least 8 characters")
       }
 
-      const newUser = {
-        id: "user_" + Math.random().toString(36).substr(2, 9),
-        email,
-        name,
-        role: "user" as const,
-        mfaEnabled: false,
-        createdAt: new Date().toISOString(),
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed')
       }
 
-      setUser(newUser)
-      setSessionToken("token_" + Math.random().toString(36).substr(2, 9))
+      // Set user and token from backend response
+      setUser(data.user)
+      setSessionToken(data.token)
       setAuthState("mfa-setup")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed")
@@ -49,6 +53,7 @@ export default function Register() {
       setLoading(false)
     }
   }
+
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">

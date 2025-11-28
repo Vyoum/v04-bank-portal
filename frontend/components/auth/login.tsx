@@ -20,30 +20,28 @@ export default function Login() {
     setLoading(true)
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
 
-      if (!email.includes("@")) {
-        throw new Error("Invalid email format")
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed')
       }
 
-      // Mock user data
-      const mockUser = {
-        id: "user_123",
-        email,
-        name: "John Doe",
-        role: "user" as const,
-        mfaEnabled: false,
-        createdAt: new Date().toISOString(),
-      }
-
-      setUser(mockUser)
-      setSessionToken("token_" + Math.random().toString(36).substr(2, 9))
-
-      // Check if MFA is enabled
-      if (mockUser.mfaEnabled) {
+      // Check if MFA is required
+      if (data.mfaRequired) {
+        setUser({ email } as any)
         setAuthState("mfa-verify")
       } else {
+        // Set user and token from backend response
+        setUser(data.user)
+        setSessionToken(data.token)
         setAuthState("authenticated")
       }
     } catch (err) {
@@ -52,6 +50,7 @@ export default function Login() {
       setLoading(false)
     }
   }
+
 
   const handleOAuthLogin = (provider: string) => {
     // Simulate OAuth login

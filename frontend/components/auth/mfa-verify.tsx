@@ -15,13 +15,40 @@ export default function MFAVerify() {
     e.preventDefault()
     setError("")
 
-    // Simulate MFA verification
-    if (code.length === 6 && /^\d+$/.test(code)) {
+    try {
+      const { user } = useAuthStore.getState()
+
+      if (!user?.email) {
+        throw new Error("User email not found")
+      }
+
+      const response = await fetch('http://localhost:8080/api/auth/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email,
+          code
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Invalid OTP code')
+      }
+
+      // Set user and token from backend response
+      const { setUser, setSessionToken } = useAuthStore.getState()
+      setUser(data.user)
+      setSessionToken(data.token)
       setAuthState("authenticated")
-    } else {
-      setError("Invalid code format. Please enter a 6-digit code.")
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Verification failed")
     }
   }
+
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
