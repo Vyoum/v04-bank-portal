@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
+// CORS is handled by API Gateway - do not add @CrossOrigin here
 public class AuthController {
     
     @Autowired
