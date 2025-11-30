@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://localhost:8443';
 
 export const API_ENDPOINTS = {
     REGISTER: `${API_BASE_URL}/api/auth/register`,

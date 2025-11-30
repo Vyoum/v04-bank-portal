@@ -1,3 +1,4 @@
+com/bankportal/gateway/config/WebClientConfig.class
 com/bankportal/gateway/filter/LoggingFilter.class
 com/bankportal/gateway/GatewayApplication.class
 com/bankportal/gateway/config/CorsConfig.class

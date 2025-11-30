@@ -29,7 +29,7 @@ export default function Register() {
         throw new Error("Password must be at least 8 characters")
       }
 
-      const response = await fetch('http://localhost:8080/api/auth/register', {
+      const response = await fetch('https://localhost:8443/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

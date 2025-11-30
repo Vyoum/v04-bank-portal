@@ -45,6 +45,16 @@ public class User {
     @Column(name = "otp_expiry")
     private LocalDateTime otpExpiry;
     
+    // OTP Security Fields for Rate Limiting
+    @Column(name = "otp_attempts")
+    private Integer otpAttempts = 0;
+    
+    @Column(name = "otp_locked_until")
+    private LocalDateTime otpLockedUntil;
+    
+    @Column(name = "last_otp_request")
+    private LocalDateTime lastOtpRequest;
+    
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     

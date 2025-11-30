@@ -22,7 +22,7 @@ export default function MFAVerify() {
         throw new Error("User email not found")
       }
 
-      const response = await fetch('http://localhost:8080/api/auth/verify-otp', {
+      const response = await fetch('https://localhost:8443/api/auth/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

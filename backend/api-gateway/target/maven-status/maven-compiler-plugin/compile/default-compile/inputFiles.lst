@@ -1,3 +1,4 @@
 /Users/vyoumagarwaal/v04-bank-portal-1/backend/api-gateway/src/main/java/com/bankportal/gateway/filter/LoggingFilter.java
+/Users/vyoumagarwaal/v04-bank-portal-1/backend/api-gateway/src/main/java/com/bankportal/gateway/config/WebClientConfig.java
 /Users/vyoumagarwaal/v04-bank-portal-1/backend/api-gateway/src/main/java/com/bankportal/gateway/config/CorsConfig.java
 /Users/vyoumagarwaal/v04-bank-portal-1/backend/api-gateway/src/main/java/com/bankportal/gateway/GatewayApplication.java
