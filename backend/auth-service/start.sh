@@ -8,7 +8,7 @@ export DB_PORT=6543
 export DB_NAME=postgres
 export DB_USERNAME=postgres.qycxqjoctkdvcihmqoke
 export DB_PASSWORD=YeuJ0GvzXQ7sHjfO
-export SERVER_PORT=9443
+export SERVER_PORT=8081
 
 # Set Java 17 for compilation
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)

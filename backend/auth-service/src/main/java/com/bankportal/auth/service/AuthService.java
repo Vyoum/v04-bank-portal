@@ -3,6 +3,7 @@ package com.bankportal.auth.service;
 import com.bankportal.auth.dto.*;
 import com.bankportal.auth.model.User;
 import com.bankportal.auth.repository.UserRepository;
+import com.bankportal.auth.util.PasswordValidator;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,11 @@ public class AuthService {
         }
         
         // Validate password strength
-        if (request.getPassword().length() < 8) {
-            throw new RuntimeException("Password must be at least 8 characters");
+        PasswordValidator.ValidationResult validation = 
+            PasswordValidator.validate(request.getPassword());
+        
+        if (!validation.isValid()) {
+            throw new RuntimeException("Password validation failed: " + validation.getErrorMessage());
         }
         
         // Create new user

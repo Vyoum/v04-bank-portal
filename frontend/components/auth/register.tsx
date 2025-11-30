@@ -2,9 +2,25 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useAuthStore } from "@/lib/auth-store"
-import { Lock, Mail, User, ArrowLeft } from "lucide-react"
+import { Lock, Mail, User, ArrowLeft, Check, X } from "lucide-react"
+
+// Password validation function
+const validatePassword = (password: string) => {
+  const requirements = [
+    { label: "At least 12 characters", test: password.length >= 12 },
+    { label: "One uppercase letter (A-Z)", test: /[A-Z]/.test(password) },
+    { label: "One lowercase letter (a-z)", test: /[a-z]/.test(password) },
+    { label: "One digit (0-9)", test: /[0-9]/.test(password) },
+    { label: "One special character (!@#$%...)", test: /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password) },
+  ]
+
+  const metRequirements = requirements.filter(r => r.test).length
+  const strength = metRequirements <= 2 ? "weak" : metRequirements <= 4 ? "medium" : "strong"
+
+  return { requirements, strength, isValid: metRequirements === 5 }
+}
 
 export default function Register() {
   const [name, setName] = useState("")
@@ -13,7 +29,11 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [showPasswordRequirements, setShowPasswordRequirements] = useState(false)
   const { setAuthState, setUser, setSessionToken } = useAuthStore()
+
+  // Calculate password validation in real-time
+  const passwordValidation = useMemo(() => validatePassword(password), [password])
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,8 +45,8 @@ export default function Register() {
         throw new Error("Passwords do not match")
       }
 
-      if (password.length < 8) {
-        throw new Error("Password must be at least 8 characters")
+      if (!passwordValidation.isValid) {
+        throw new Error("Password does not meet all requirements")
       }
 
       const response = await fetch('https://localhost:8443/api/auth/register', {
@@ -54,6 +74,11 @@ export default function Register() {
     }
   }
 
+  // Strength indicator color
+  const strengthColor =
+    passwordValidation.strength === "weak" ? "bg-red-500" :
+      passwordValidation.strength === "medium" ? "bg-yellow-500" :
+        "bg-green-500"
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -124,11 +149,48 @@ export default function Register() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setShowPasswordRequirements(true)}
                   placeholder="••••••••"
                   className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>
+
+              {/* Password Strength Indicator */}
+              {password && (
+                <div className="mt-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-300 ${strengthColor}`}
+                        style={{ width: `${(passwordValidation.requirements.filter(r => r.test).length / 5) * 100}%` }}
+                      />
+                    </div>
+                    <span className="text-xs font-medium capitalize">{passwordValidation.strength}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Password Requirements */}
+              {showPasswordRequirements && password && (
+                <div className="mt-3 p-3 bg-muted rounded-lg border border-border">
+                  <p className="text-xs font-medium text-foreground mb-2">Password must contain:</p>
+                  <ul className="space-y-1">
+                    {passwordValidation.requirements.map((req, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-xs">
+                        {req.test ? (
+                          <Check className="w-3 h-3 text-green-500" />
+                        ) : (
+                          <X className="w-3 h-3 text-red-500" />
+                        )}
+                        <span className={req.test ? "text-green-600" : "text-muted-foreground"}>
+                          {req.label}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             <div>
@@ -144,11 +206,14 @@ export default function Register() {
                   required
                 />
               </div>
+              {confirmPassword && password !== confirmPassword && (
+                <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !passwordValidation.isValid || password !== confirmPassword}
               className="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               {loading ? "Creating account..." : "Create Account"}
